@@ -37,8 +37,8 @@ async function loadLogo(slug,color){
     if(requestId===logoRequest) { holder.textContent='?'; holder.classList.remove('has-logo'); }
   }
 }
-function nextQuestion(){ if(index>=questions.length) return finish(); locked=false; const [name,slug,color]=questions[index]; $('progressText').textContent=`${index+1} / ${questions.length}`; $('answerInput').value=''; loadLogo(slug,color); $('answerInput').focus(); deadline=Date.now()+10000; clearInterval(timer); timer=setInterval(tick,50);tick(); }
-function tick(){ const remaining=Math.max(0,deadline-Date.now()), fraction=remaining/10000;$('timerBar').style.transform=`scaleX(${fraction})`;$('timerBar').style.background=fraction<.3?'#ff4d77':'#2a57ff';$('timeText').textContent=`${(remaining/1000).toFixed(1)} s`;if(remaining<=0){clearInterval(timer);checkAnswer('');} }
+function nextQuestion(){ if(index>=questions.length) return finish(); locked=false; const [name,slug,color]=questions[index]; $('progressText').textContent=`${index+1} / ${questions.length}`; $('answerInput').value=''; loadLogo(slug,color); $('answerInput').focus(); deadline=Date.now()+15000; clearInterval(timer); timer=setInterval(tick,50);tick(); }
+function tick(){ const remaining=Math.max(0,deadline-Date.now()), fraction=remaining/15000;$('timerBar').style.transform=`scaleX(${fraction})`;$('timerBar').style.background=fraction<.3?'#ff4d77':'#2a57ff';$('timeText').textContent=`${(remaining/1000).toFixed(1)} s`;if(remaining<=0){clearInterval(timer);checkAnswer('');} }
 function normalize(s){return s.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');}
 function accepted(name,answer){const key=name.toLowerCase(), possibilities=[name,...(aliases[key]||[])];return possibilities.some(v=>normalize(v)===normalize(answer));}
 function checkAnswer(answer){ if(locked)return;locked=true;clearInterval(timer);const correct=accepted(questions[index][0],answer);if(correct){score++;toast('Správne! ✓');}else toast(`Správna odpoveď: ${questions[index][0]}`);index++;setTimeout(nextQuestion,correct?550:1250); }
